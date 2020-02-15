@@ -2,7 +2,7 @@
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.1-blue.svg?cacheSeconds=2592000" />
   <a href="https://twitter.com/Andrew_Brudnak" target="_blank">
-    <img alt="Twitter: Andrew\_Brudnak" src="https://img.shields.io/twitter/follow/Andrew\_Brudnak.svg?style=social" />
+    <img alt="Twitter: Andrew_Brudnak" src="https://img.shields.io/twitter/follow/Andrew_Brudnak.svg?style=social" />
   </a>
 </p>
 
