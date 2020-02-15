@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
+
+func handlerFunc(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<>h1Welcome to ChefHub!</h1>")
+}
 
 func main()  {
-	fmt.Println("ChefHub")
+	http.HandleFunc("/", handlerFunc)
+	http.ListenAndServe(":3000", nil)
 }
