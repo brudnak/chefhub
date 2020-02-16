@@ -248,7 +248,11 @@ dist/
 
 # Temporary folders
 tmp/
-temp/
+temp
+
+# Experiamental folders
+exp/
+exp
 
 ### SublimeText ###
 # Cache files for Sublime Text

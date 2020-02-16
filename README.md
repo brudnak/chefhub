@@ -6,11 +6,9 @@
   </a>
 </p>
 
-> Web application for chef's to show off their skills. Created solely with the Go programming language.
+> Web App for Chef's to show off their skills. Created with the Go programming language.
 
-### 🏠 [Homepage](chefhub.pw)
-
-### ✨ [Demo](chefhub.pw)
+### 🏠 [ChefHub.pw](chefhub.pw)
 
 ## Author
 
