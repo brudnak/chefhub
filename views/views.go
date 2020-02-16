@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	LayoutDir string = "views/layouts/"
+	LayoutDir   string = "views/layouts/"
 	TemplateExt string = ".gohtml"
 )
 
@@ -20,13 +20,13 @@ func NewView(layout string, files ...string) *View {
 
 	return &View{
 		Template: t,
-		Layout: layout,
+		Layout:   layout,
 	}
 }
 
 type View struct {
 	Template *template.Template
-	Layout string
+	Layout   string
 }
 
 // Render is used to render the view with the predefined layout
