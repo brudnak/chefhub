@@ -11,6 +11,9 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "<h1>Welcome to ChefHub!</h1>")
 	} else if r.URL.Path == "/contact" {
 		fmt.Fprint(w, "<h1>Contact Us</h1>")
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprint(w, "<h1>Something went wrong! 404</h1>")
 	}
 }
 
