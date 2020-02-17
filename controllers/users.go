@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"chefhub.pw/views"
+	"fmt"
 	"net/http"
 )
 
@@ -19,8 +20,21 @@ type Users struct {
 	NewView *views.View
 }
 
+
+// New is used to render the form where a user can
+// create a new user account.
+//
+// GET /signup
 func (u *Users) New(w http.ResponseWriter, r *http.Request) {
 	if err := u.NewView.Render(w, nil); err != nil {
 		panic(err)
 	}
+}
+
+// Create is used to process the signup for when a user
+// submits it. This is used to create a new user account.
+//
+// POST /signup
+func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "This is a temporary response.")
 }
