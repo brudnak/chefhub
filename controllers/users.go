@@ -20,7 +20,6 @@ type Users struct {
 	NewView *views.View
 }
 
-
 // New is used to render the form where a user can
 // create a new user account.
 //
