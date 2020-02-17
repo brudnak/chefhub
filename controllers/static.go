@@ -3,13 +3,13 @@ package controllers
 import "chefhub.pw/views"
 
 func NewStatic() *Static {
-	return &Static {
-		HomeView: views.NewView("bootstrap", "views/static/home.gohtml"),
-		ContactView: views.NewView("bootstrap", "views/static/contact.gohtml"),
+	return &Static{
+		Home:    views.NewView("bootstrap", "views/static/home.gohtml"),
+		Contact: views.NewView("bootstrap", "views/static/contact.gohtml"),
 	}
 }
 
 type Static struct {
-	HomeView *views.View
-	ContactView *views.View
+	Home    *views.View
+	Contact *views.View
 }
