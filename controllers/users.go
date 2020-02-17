@@ -32,7 +32,7 @@ func (u *Users) New(w http.ResponseWriter, r *http.Request) {
 }
 
 type SignupForm struct {
-	Email string `schema:"email"`
+	Email    string `schema:"email"`
 	Password string `schema:"password"`
 }
 
