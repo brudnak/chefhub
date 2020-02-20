@@ -20,10 +20,9 @@ func main() {
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	us, err := models.NewUserService(psqlInfo)
-	if err != nil {
-		panic(err)
-	}
+	must(err)
 	defer us.Close()
+	us.AutoMigrate()
 
 	staticC := controllers.NewStatic()
 	usersC := controllers.NewUsers(us)
