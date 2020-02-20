@@ -2,13 +2,31 @@ package main
 
 import (
 	"chefhub.pw/controllers"
+	"chefhub.pw/models"
+	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 )
 
+const (
+	host     = ""
+	port     = 42
+	user     = ""
+	password = ""
+	dbname   = ""
+)
+
 func main() {
+
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	us, err := models.NewUserService(psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer us.Close()
+
 	staticC := controllers.NewStatic()
-	usersC := controllers.NewUsers()
+	usersC := controllers.NewUsers(us)
 
 	r := mux.NewRouter()
 	r.Handle("/", staticC.Home).Methods("GET")
