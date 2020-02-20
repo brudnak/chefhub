@@ -10,6 +10,10 @@ var (
 	// ErrNotFound is returned when a resource cannot be found
 	// in the database.
 	ErrNotFound = errors.New("models: resource not found")
+
+	// ErrInvalidID is returned when an invalid ID is provided
+	// to a method like Delete.
+	ErrInvalidID = errors.New("models: ID provided was invalid")
 )
 
 func NewUserService(connectionInfo string) (*UserService, error) {
@@ -80,6 +84,15 @@ func (us *UserService) Create(user *User) error {
 // in the provided user object.
 func (us *UserService) Update(user *User) error {
 	return us.db.Save(user).Error
+}
+
+// Delete will delete the user with the provided ID.
+func (us *UserService) Delete(id uint) error {
+	if id == 0 {
+		return ErrInvalidID
+	}
+	user := User{Model: gorm.Model{ID: id}}
+	return us.db.Delete(&user).Error
 }
 
 // Closes the UserService database connection.
