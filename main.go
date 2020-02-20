@@ -23,8 +23,11 @@ func main() {
 	us, err := models.NewUserService(psqlInfo)
 	must(err)
 	defer us.Close()
-	//us.AutoMigrate()
-	us.DestructiveReset()
+	us.AutoMigrate()
+	// *****************************
+	// Danger! Wipes the users table
+	//us.DestructiveReset()
+	// *****************************
 
 	staticC := controllers.NewStatic()
 	usersC := controllers.NewUsers(us)
