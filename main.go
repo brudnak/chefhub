@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+// nothing to see here... risky but just for fun.
 const (
 	host     = ""
 	port     = 5432
@@ -22,7 +23,8 @@ func main() {
 	us, err := models.NewUserService(psqlInfo)
 	must(err)
 	defer us.Close()
-	us.AutoMigrate()
+	//us.AutoMigrate()
+	us.DestructiveReset()
 
 	staticC := controllers.NewStatic()
 	usersC := controllers.NewUsers(us)
