@@ -10,7 +10,7 @@ import (
 
 const (
 	host     = ""
-	port     = 42
+	port     = 5432
 	user     = ""
 	password = ""
 	dbname   = ""

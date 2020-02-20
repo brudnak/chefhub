@@ -78,12 +78,6 @@ func first(db *gorm.DB, user *User) error {
 // Create will create the provided user and back fill data
 // like the ID, CreatedAt, and UpdatedAt fields.
 func (us *UserService) Create(user *User) error {
-	return us.db.Create(user).Error
-}
-
-// Update will update the provided user with all of the data
-// in the provided user object.
-func (us *UserService) Update(user *User) error {
 	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -91,6 +85,12 @@ func (us *UserService) Update(user *User) error {
 	user.PasswordHash = string(hashedBytes)
 	// Clear out password once hashed so there isn't a chance of logging it somewhere.
 	user.Password = ""
+	return us.db.Create(user).Error
+}
+
+// Update will update the provided user with all of the data
+// in the provided user object.
+func (us *UserService) Update(user *User) error {
 	return us.db.Save(user).Error
 }
 
@@ -128,7 +128,7 @@ func (us *UserService) AutoMigrate() error {
 type User struct {
 	gorm.Model
 	Name         string
-	Email        string `gorm:not null;unique_index`
+	Email        string `gorm:"not null;unique_index"`
 	Password     string `gorm:"-"`
 	PasswordHash string `gorm:"not null"`
 }
