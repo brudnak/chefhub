@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -83,6 +84,13 @@ func (us *UserService) Create(user *User) error {
 // Update will update the provided user with all of the data
 // in the provided user object.
 func (us *UserService) Update(user *User) error {
+	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	user.PasswordHash = string(hashedBytes)
+	// Clear out password once hashed so there isn't a chance of logging it somewhere.
+	user.Password = ""
 	return us.db.Save(user).Error
 }
 
@@ -119,6 +127,8 @@ func (us *UserService) AutoMigrate() error {
 
 type User struct {
 	gorm.Model
-	Name  string
-	Email string `gorm:not null;unique_index`
+	Name         string
+	Email        string `gorm:not null;unique_index`
+	Password     string `gorm:"-"`
+	PasswordHash string `gorm:"not null"`
 }
