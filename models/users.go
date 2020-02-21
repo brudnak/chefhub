@@ -15,9 +15,13 @@ var (
 	// ErrInvalidID is returned when an invalid ID is provided
 	// to a method like Delete.
 	ErrInvalidID = errors.New("models: ID provided was invalid")
+
+	// ErrInvalidPassword is returned when an invalid password
+	// is used when attempting to authenticate a user.
+	ErrInvalidPassword = errors.New("models: incorrect password provided")
 )
 
-const userPwPepper = "russelljamesrubygenevieve"
+const userPwPepper = "ruby"
 
 func NewUserService(connectionInfo string) (*UserService, error) {
 	db, err := gorm.Open("postgres", connectionInfo)
@@ -66,6 +70,27 @@ func (us *UserService) ByEmail(email string) (*User, error) {
 	return &user, err
 }
 
+// Authenticate can be used to authenticate a user with the
+// provided email address and password.
+func (us *UserService) Authenticate(email, password string) (*User, error) {
+	foundUser, err := us.ByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(foundUser.PasswordHash), []byte(password+userPwPepper))
+	if err != nil {
+		switch err {
+		case bcrypt.ErrMismatchedHashAndPassword:
+			return nil, ErrInvalidPassword
+		default:
+			return nil, err
+		}
+	}
+
+	return foundUser, nil
+}
+
 // first will query using the provided gorm.DB and it will
 // get the first item returned and place it into dst. If
 // nothing is found in the query, it will return ErrNotFound
@@ -86,7 +111,6 @@ func (us *UserService) Create(user *User) error {
 		return err
 	}
 	user.PasswordHash = string(hashedBytes)
-	// Clear out password once hashed so there isn't a chance of logging it somewhere.
 	user.Password = ""
 	return us.db.Create(user).Error
 }
