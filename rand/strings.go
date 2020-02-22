@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 )
 
-// RememberTokenBytes is what we're passing to RememberToken.
+// RememberTokenBytes is 32 bytes to give us enough entropy to be safe.
 const RememberTokenBytes = 32
 
 // Bytes will help us generate n random bytes, or will
