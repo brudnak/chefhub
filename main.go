@@ -25,10 +25,6 @@ func main() {
 	must(err)
 	defer us.Close()
 	us.AutoMigrate()
-	// *****************************
-	// Danger! Wipes the users table
-	//us.DestructiveReset()
-	// *****************************
 
 	staticC := controllers.NewStatic()
 	usersC := controllers.NewUsers(us)
