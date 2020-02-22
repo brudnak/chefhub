@@ -1,20 +1,21 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+
 	"chefhub.pw/controllers"
 	"chefhub.pw/models"
-	"fmt"
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
 // nothing to see here... risky but just for fun.
 const (
-	host     = ""
+	host     = "localhost"
 	port     = 5432
 	user     = ""
 	password = ""
-	dbname   = ""
+	dbname   = "chefhub_dev"
 )
 
 func main() {
