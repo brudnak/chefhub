@@ -53,6 +53,10 @@ type UserDB interface {
 
 	// Used to close DB connection
 	Close() error
+
+	// Migration helpers
+	AutoMigrate() error
+	DestructiveReset() error
 }
 
 // NewUserService helps create a new user.
@@ -71,6 +75,10 @@ func NewUserService(connectionInfo string) (*UserService, error) {
 
 // UserService is a struct to point to the gorm db orm.
 type UserService struct {
+	UserDB
+}
+
+type userGorm struct {
 	db   *gorm.DB
 	hmac hash.HMAC
 }
