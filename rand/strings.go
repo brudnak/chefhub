@@ -1,3 +1,4 @@
+// Package rand is mostly a wrapping around the standard lib crypto/rand.
 package rand
 
 import (
