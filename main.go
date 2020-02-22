@@ -9,12 +9,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// nothing to see here... risky but just for fun.
 const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	password = "Hunter666"
+	password = "admin"
 	dbname   = "chefhub_dev"
 )
 
