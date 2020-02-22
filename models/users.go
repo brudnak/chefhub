@@ -2,7 +2,9 @@ package models
 
 import (
 	"errors"
+
 	"github.com/jinzhu/gorm"
+	// github.com/jinzhu/gorm/dialects/postgres is needed for GORM
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -21,8 +23,9 @@ var (
 	ErrInvalidPassword = errors.New("models: incorrect password provided")
 )
 
-const userPwPepper = "ruby"
+const userPwPepper = "russelljamesrubygenevieve"
 
+// NewUserService helps create a new user.
 func NewUserService(connectionInfo string) (*UserService, error) {
 	db, err := gorm.Open("postgres", connectionInfo)
 	if err != nil {
@@ -33,6 +36,7 @@ func NewUserService(connectionInfo string) (*UserService, error) {
 	}, nil
 }
 
+// UserService is a struct to point to the gorm db orm.
 type UserService struct {
 	db *gorm.DB
 }
@@ -130,7 +134,7 @@ func (us *UserService) Delete(id uint) error {
 	return us.db.Delete(&user).Error
 }
 
-// Closes the UserService database connection.
+// Close closes the UserService database connection.
 func (us *UserService) Close() error {
 	return us.db.Close()
 }
@@ -152,6 +156,7 @@ func (us *UserService) AutoMigrate() error {
 	return nil
 }
 
+// User is the struct of the ChefHub users.
 type User struct {
 	gorm.Model
 	Name         string
