@@ -13,8 +13,8 @@ import (
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = ""
-	password = ""
+	user     = "postgres"
+	password = "Hunter666"
 	dbname   = "chefhub_dev"
 )
 
