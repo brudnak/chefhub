@@ -165,7 +165,15 @@ func (uv *userValidator) ByRemember(token string) (*User, error) {
 // Create will create the provided user and back fill data
 // like the ID, CreatedAt, and UpdatedAt fields.
 func (uv *userValidator) Create(user *User) error {
-	err := runUserValFuncs(user, uv.bcryptPassword, uv.setRememberIfUnset, uv.hmacRemember)
+	if user.Remember == "" {
+		token, err := rand.RememberToken()
+		if err != nil {
+			return err
+		}
+		user.Remember = token
+	}
+
+	err := runUserValFuncs(user, uv.bcryptPassword, uv.hmacRemember)
 	if err != nil {
 		return err
 	}
@@ -183,8 +191,11 @@ func (uv *userValidator) Update(user *User) error {
 
 // Delete will delete the user with the provided ID.
 func (uv *userValidator) Delete(id uint) error {
-	if id == 0 {
-		return ErrInvalidID
+	var user User
+	user.ID = id
+	err := runUserValFuncs(&user, uv.idGreaterThan(0))
+	if err != nil {
+		return err
 	}
 	return uv.UserDB.Delete(id)
 }
@@ -226,6 +237,15 @@ func (uv *userValidator) hmacRemember(user *User) error {
 	}
 	user.RememberHash = uv.hmac.Hash(user.Remember)
 	return nil
+}
+
+func (uv *userValidator) idGreaterThan(n uint) userValFunc {
+	return userValFunc(func(user *User) error {
+		if user.ID <= n {
+			return ErrInvalidID
+		}
+		return nil
+	})
 }
 
 // UserDB, not used. If the userGorm doesn't match interface
