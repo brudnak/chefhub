@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -35,6 +34,10 @@ var (
 	// ErrEmailInvalid is returned when an email address provided
 	// does not match any of our requirements.
 	ErrEmailInvalid = errors.New("models: email address is not valid")
+
+	// ErrEmailTaken is returned when an update or create is attempted
+	// with an email address that is already in use.
+	ErrEmailTaken = errors.New("models: email address is already taken")
 )
 
 const userPwPepper = "secret-random-string"
@@ -104,10 +107,7 @@ func NewUserService(connectionInfo string) (UserService, error) {
 		return nil, err
 	}
 	hmac := hash.NewHMAC(hmacSecretKey)
-	uv := &userValidator{
-		hmac:   hmac,
-		UserDB: ug,
-	}
+	uv := newUserValidator(ug, hmac)
 	return &userService{
 		UserDB: uv,
 	}, nil
@@ -203,7 +203,8 @@ func (uv *userValidator) Create(user *User) error {
 		uv.hmacRemember,
 		uv.normalizeEmail,
 		uv.requireEmail,
-		uv.emailFormat)
+		uv.emailFormat,
+		uv.emailIsAvail)
 	if err != nil {
 		return err
 	}
@@ -217,7 +218,8 @@ func (uv *userValidator) Update(user *User) error {
 		uv.hmacRemember,
 		uv.normalizeEmail,
 		uv.requireEmail,
-		uv.emailFormat)
+		uv.emailFormat,
+		uv.emailIsAvail)
 	if err != nil {
 		return err
 	}
@@ -306,9 +308,21 @@ func (uv *userValidator) emailFormat(user *User) error {
 	return nil
 }
 
-// WIP
 func (uv *userValidator) emailIsAvail(user *User) error {
-	fmt.Println("building func...")
+	existing, err := uv.ByEmail(user.Email)
+	if err == ErrNotFound {
+		// Email address is not taken
+	}
+	if err != nil {
+		return err
+	}
+
+	// We found a user w/ this email address...
+	// If the found user has the same ID as this user, it is
+	// an update this is the same user.
+	if user.ID != existing.ID {
+		return ErrEmailTaken
+	}
 	return nil
 }
 
