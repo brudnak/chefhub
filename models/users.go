@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -302,6 +303,12 @@ func (uv *userValidator) emailFormat(user *User) error {
 	if !uv.emailRegex.MatchString(user.Email) {
 		return ErrEmailInvalid
 	}
+	return nil
+}
+
+// WIP
+func (uv *userValidator) emailIsAvail(user *User) error {
+	fmt.Println("building func...")
 	return nil
 }
 
