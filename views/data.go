@@ -30,3 +30,25 @@ type Data struct {
 	Alert *Alert
 	Yield interface{}
 }
+
+// SetAlert only lets users see errors that are
+// approved for them to receive.
+func (d *Data) SetAlert(err error) {
+	if pErr, ok := err.(PublicError); ok {
+		d.Alert = &Alert{
+			Level:   AlertLvlError,
+			Message: pErr.Public(),
+		}
+	} else {
+		d.Alert = &Alert{
+			Level:   AlertLvlError,
+			Message: AlertMsgGeneric,
+		}
+	}
+}
+
+// PublicError is our interface.
+type PublicError interface {
+	error
+	Public() string
+}
