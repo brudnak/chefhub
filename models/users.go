@@ -267,6 +267,14 @@ func (uv *userValidator) bcryptPassword(user *User) error {
 	return nil
 }
 
+func (uv *userValidator) hmacRemember(user *User) error {
+	if user.Remember == "" {
+		return nil
+	}
+	user.RememberHash = uv.hmac.Hash(user.Remember)
+	return nil
+}
+
 func (uv *userValidator) setRememberIfUnset(user *User) error {
 	if user.Remember != "" {
 		return nil
@@ -279,14 +287,6 @@ func (uv *userValidator) setRememberIfUnset(user *User) error {
 	user.Remember = token
 	return nil
 
-}
-
-func (uv *userValidator) hmacRemember(user *User) error {
-	if user.Remember == "" {
-		return nil
-	}
-	user.RememberHash = uv.hmac.Hash(user.Remember)
-	return nil
 }
 
 func (uv *userValidator) idGreaterThan(n uint) userValFunc {
