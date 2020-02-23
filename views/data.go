@@ -47,6 +47,14 @@ func (d *Data) SetAlert(err error) {
 	}
 }
 
+// AlertError is our helper function for showing errors.
+func (d *Data) AlertError(msg string) {
+	d.Alert = &Alert{
+		Level:   AlertLvlError,
+		Message: msg,
+	}
+}
+
 // PublicError is our interface.
 type PublicError interface {
 	error
