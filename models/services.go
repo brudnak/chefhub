@@ -2,6 +2,7 @@ package models
 
 import "github.com/jinzhu/gorm"
 
+// NewServices sets up new services.
 func NewServices(connectionInfo string) (*Services, error) {
 	db, err := gorm.Open("postgres", connectionInfo)
 	if err != nil {
@@ -10,10 +11,32 @@ func NewServices(connectionInfo string) (*Services, error) {
 	db.LogMode(true)
 	return &Services{
 		User: NewUserService(db),
+		db:   db,
 	}, nil
 }
 
+// Services holds the various resources
 type Services struct {
 	Gallery GalleryService
 	User    UserService
+	db      *gorm.DB
+}
+
+// Close shuts down the database connection.
+func (s *Services) Close() error {
+	return s.db.Close()
+}
+
+// DestructiveReset drops all tables and rebuilds them.
+func (s *Services) DestructiveReset() error {
+	err := s.db.DropTableIfExists(&User{}, &Gallery{}).Error
+	if err != nil {
+		return err
+	}
+	return s.AutoMigrate()
+}
+
+// AutoMigrate will attempt to automatically migrate all tables.
+func (s *Services) AutoMigrate() error {
+	return s.db.AutoMigrate(&User{}, &Gallery{}).Error
 }
