@@ -15,4 +15,5 @@ type GalleryService interface{}
 
 // GalleryDB interface for our data connection
 type GalleryDB interface {
+	Create(gallery *Gallery) error
 }
