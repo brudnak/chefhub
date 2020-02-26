@@ -9,6 +9,7 @@ import (
 	"chefhub.pw/views"
 )
 
+// NewGalleries helps us create a new gallery
 func NewGalleries(gs models.GalleryService) *Galleries {
 	return &Galleries{
 		New: views.NewView("bootstrap", "galleries/new"),
@@ -22,11 +23,12 @@ type Galleries struct {
 	gs  models.GalleryService
 }
 
+// GalleryForm struct for holding title
 type GalleryForm struct {
 	Title string `schema:"title"`
 }
 
-// POST /galleries
+// Create - POST galleries
 func (g *Galleries) Create(w http.ResponseWriter, r *http.Request) {
 	var vd views.Data
 	var form GalleryForm
