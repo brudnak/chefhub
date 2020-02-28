@@ -22,6 +22,7 @@ func NewGalleries(gs models.GalleryService, r *mux.Router) *Galleries {
 	return &Galleries{
 		New:      views.NewView("bootstrap", "galleries/new"),
 		ShowView: views.NewView("bootstrap", "galleries/show"),
+		EditView: views.NewView("bootstrap", "galleries/edit"),
 		gs:       gs,
 		r:        r,
 	}
@@ -31,6 +32,7 @@ func NewGalleries(gs models.GalleryService, r *mux.Router) *Galleries {
 type Galleries struct {
 	New      *views.View
 	ShowView *views.View
+	EditView *views.View
 	gs       models.GalleryService
 	r        *mux.Router
 }
@@ -49,6 +51,22 @@ func (g *Galleries) Show(w http.ResponseWriter, r *http.Request) {
 	var vd views.Data
 	vd.Yield = gallery
 	g.ShowView.Render(w, vd)
+}
+
+// Edit - GET /galleries/:id/edit
+func (g *Galleries) Edit(w http.ResponseWriter, r *http.Request) {
+	gallery, err := g.galleryByID(w, r)
+	if err != nil {
+		return
+	}
+	user := context.User(r.Context())
+	if gallery.UserID != user.ID {
+		http.Error(w, "Gallery not found", http.StatusNotFound)
+		return
+	}
+	var vd views.Data
+	vd.Yield = gallery
+	g.EditView.Render(w, vd)
 }
 
 // Create - POST galleries
