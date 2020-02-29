@@ -1,5 +1,7 @@
 package views
 
+import "chefhub.pw/models"
+
 const (
 	// AlertLvlError is the Bootstrap danger formatting.
 	AlertLvlError = "danger"
@@ -28,6 +30,7 @@ type Alert struct {
 // to come in.
 type Data struct {
 	Alert *Alert
+	User  *models.User
 	Yield interface{}
 }
 
