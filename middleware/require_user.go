@@ -7,19 +7,21 @@ import (
 	"chefhub.pw/models"
 )
 
-// User holds the user interface.
+// User middleware will lookup the current user via their
+// remember_token cookie using the UserService. If the user
+// is found, they will be set on the request context.
+// Regardless, the next handler is always called.
 type User struct {
 	models.UserService
 }
 
-// Apply helps serve ApplyFn
+// Apply handles...
 func (mw *User) Apply(next http.Handler) http.HandlerFunc {
 	return mw.ApplyFn(next.ServeHTTP)
 }
 
-// ApplyFn applies our middleware to check if users are logged in
+// ApplyFn handles...
 func (mw *User) ApplyFn(next http.HandlerFunc) http.HandlerFunc {
-
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("remember_token")
 		if err != nil {
@@ -38,20 +40,18 @@ func (mw *User) ApplyFn(next http.HandlerFunc) http.HandlerFunc {
 	})
 }
 
-// RequireUser assumes that User middleware has already been run
-// otherwise it wil not work correctly
-type RequireUser struct {
-	User
-}
+// RequireUser will redirect a user to the /login page
+// if they are not logged in. This middleware assumes
+// that User middleware has already been run, otherwise
+// it will always redirect users.
+type RequireUser struct{}
 
-// Apply assumes that User middleware has already been run
-// otherwise it wil not work correctly
+// Apply handles...
 func (mw *RequireUser) Apply(next http.Handler) http.HandlerFunc {
 	return mw.ApplyFn(next.ServeHTTP)
 }
 
-// ApplyFn assumes that User middleware has already been run
-// otherwise it wil not work correctly
+// ApplyFn handles...
 func (mw *RequireUser) ApplyFn(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := context.User(r.Context())

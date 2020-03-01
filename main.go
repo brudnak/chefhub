@@ -34,9 +34,7 @@ func main() {
 	userMw := middleware.User{
 		UserService: services.User,
 	}
-	requireUserMw := middleware.RequireUser{
-		User: userMw,
-	}
+	requireUserMw := middleware.RequireUser{}
 
 	r.Handle("/", staticC.Home).Methods("GET")
 	r.Handle("/contact", staticC.Contact).Methods("GET")

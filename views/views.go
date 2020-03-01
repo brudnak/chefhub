@@ -57,13 +57,13 @@ func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) 
 		vd = d
 		// do nothing
 	default:
-		data = Data{
+		vd = Data{
 			Yield: data,
 		}
 	}
 	vd.User = context.User(r.Context())
 	var buf bytes.Buffer
-	if err := v.Template.ExecuteTemplate(&buf, v.Layout, data); err != nil {
+	if err := v.Template.ExecuteTemplate(&buf, v.Layout, vd); err != nil {
 		http.Error(w, "Something went wrong. If the problem persists, please email brudnak@icloud.com", http.StatusInternalServerError)
 		return
 	}
