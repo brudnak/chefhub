@@ -4,7 +4,14 @@
     <h1>
       {{.Title}}
     </h1>
-    <p>Images coming soon...</p>
+    <ul>
+      <!-- prettier-ignore -->
+      {{range .Images}}
+
+      <li>{{.}}</li>
+      <!-- prettier-ignore -->
+      {{end}}
+    </ul>
   </div>
 </div>
 {{ end }}
