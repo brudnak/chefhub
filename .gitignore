@@ -347,4 +347,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.gitignore.io/api/go,vim,node,linux,macos,windows,sublimetext,jetbrains+iml,visualstudiocode
+# End of https://www.gitignore.io/api/go,vim,node,linux,macos,windows,sublimetext,jetbrains+iml,
+
+images/**
