@@ -194,7 +194,11 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	fmt.Fprintln(w, "Files successfully uploaded!")
+	images, err := g.is.ByGalleryID(gallery.ID)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Fprintln(w, "Files: ", images)
 }
 
 // Delete - POST /galleries/:id/delete
