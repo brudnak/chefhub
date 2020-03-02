@@ -183,7 +183,7 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create tje dorectpr
+	// Create the directory
 	galleryPath := fmt.Sprintf("images/galleries/%v/", gallery.ID)
 	err = os.MkdirAll(galleryPath, 0755)
 	if err != nil {
