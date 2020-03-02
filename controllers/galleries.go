@@ -15,15 +15,9 @@ import (
 )
 
 const (
-	// IndexGallery shows our list of galleries/
-	IndexGallery = "index_gallery"
-
-	// ShowGallery is where we're routing to.
-	ShowGallery = "show_gallery"
-
-	// EditGallery takes us to the edit page.
-	EditGallery = "edit_gallery"
-
+	IndexGallery    = "index_gallery"
+	ShowGallery     = "show_gallery"
+	EditGallery     = "edit_gallery"
 	maxMultipartMem = 1 << 20 // 1 megabyte
 )
 
@@ -183,7 +177,7 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create the directory
+	// Create the directory to contain our images
 	galleryPath := fmt.Sprintf("images/galleries/%v/", gallery.ID)
 	err = os.MkdirAll(galleryPath, 0755)
 	if err != nil {
@@ -194,6 +188,7 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 
 	files := r.MultipartForm.File["images"]
 	for _, f := range files {
+		// Open the uploaded file
 		file, err := f.Open()
 		if err != nil {
 			vd.SetAlert(err)
@@ -202,6 +197,7 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 
+		// Create a destination file
 		dst, err := os.Create(galleryPath + f.Filename)
 		if err != nil {
 			vd.SetAlert(err)
@@ -210,15 +206,15 @@ func (g *Galleries) ImageUpload(w http.ResponseWriter, r *http.Request) {
 		}
 		defer dst.Close()
 
+		// Copy uploaded file data to the destination file
 		_, err = io.Copy(dst, file)
 		if err != nil {
 			vd.SetAlert(err)
 			g.EditView.Render(w, r, vd)
 			return
 		}
-		fmt.Fprintln(w, "Files successfully uploaded!")
-
 	}
+	fmt.Fprintln(w, "Files successfully uploaded!")
 }
 
 // Delete - POST /galleries/:id/delete
