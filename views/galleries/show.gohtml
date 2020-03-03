@@ -4,14 +4,24 @@
     <h1>
       {{.Title}}
     </h1>
-    <ul>
-      <!-- prettier-ignore -->
-      {{range .Images}}
-
-      <li>{{.}}</li>
-      <!-- prettier-ignore -->
-      {{end}}
-    </ul>
+    <hr />
   </div>
 </div>
+<div class="row">
+  {{range .ImagesSplitN 3}}
+  <div class="col-md-4">
+    {{range .}}
+    <a href="{{.}}">
+      <img src="{{.}}" class="thumbnail" />
+    </a>
+    {{ end }}
+  </div>
+  <!-- prettier-ignore-->
+  {{end}}
+</div>
+<style>
+  .thumbnail {
+    width: 100%;
+  }
+</style>
 {{ end }}
