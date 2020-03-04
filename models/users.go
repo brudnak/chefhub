@@ -8,7 +8,6 @@ import (
 	"chefhub.pw/rand"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"golang.org/x/crypto/bcrypt"
 )
 

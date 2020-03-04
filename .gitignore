@@ -350,3 +350,5 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/go,vim,node,linux,macos,windows,sublimetext,jetbrains+iml,
 
 images/**
+
+config.go
