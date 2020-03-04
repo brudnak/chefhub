@@ -1,6 +1,10 @@
 package views
 
-import "chefhub.pw/models"
+import (
+	"log"
+
+	"chefhub.pw/models"
+)
 
 const (
 	// AlertLvlError is the Bootstrap danger formatting.
@@ -43,6 +47,7 @@ func (d *Data) SetAlert(err error) {
 			Message: pErr.Public(),
 		}
 	} else {
+		log.Println(err)
 		d.Alert = &Alert{
 			Level:   AlertLvlError,
 			Message: AlertMsgGeneric,
