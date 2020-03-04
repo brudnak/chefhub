@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"path/filepath"
 )
@@ -18,7 +19,12 @@ type Image struct {
 // Path is used to build the absolute path used to reference this image
 // via a web request.
 func (i *Image) Path() string {
-	return "/" + filepath.ToSlash(i.RelativePath())
+	temp := url.URL{
+		// ToSlash because I'm working on a windows machine.
+		// hopefully will develop on a mac soon...
+		Path: "/" + filepath.ToSlash(i.RelativePath()), // microsoft weirdness
+	}
+	return temp.String()
 }
 
 // RelativePath is used to build the path to this image on our local
