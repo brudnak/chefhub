@@ -352,3 +352,4 @@ $RECYCLE.BIN/
 images/**
 
 config.go
+.config
