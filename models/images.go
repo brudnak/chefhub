@@ -23,6 +23,7 @@ func (i *Image) Path() string {
 		// ToSlash because I'm working on a windows machine.
 		// hopefully will develop on a mac soon...
 		Path: "/" + filepath.ToSlash(i.RelativePath()), // microsoft weirdness
+		// Path: "/" + i.RelativePath(),
 	}
 	return temp.String()
 }
