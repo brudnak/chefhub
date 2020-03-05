@@ -5,27 +5,21 @@ import (
 	"errors"
 	"html/template"
 	"io"
-	"log"
 	"net/http"
+	"net/url"
 	"path/filepath"
 
-	"chefhub.pw/context"
 	"github.com/gorilla/csrf"
+
+	"chefhub.pw/context"
 )
 
 var (
-
-	// LayoutDir cleans up our file path.
-	LayoutDir string = "views/layouts/"
-
-	// TemplateDir is our views dir path to append.
+	LayoutDir   string = "views/layouts/"
 	TemplateDir string = "views/"
-
-	// TemplateExt this is our file type for go template files.
 	TemplateExt string = ".gohtml"
 )
 
-// NewView creates a new view.
 func NewView(layout string, files ...string) *View {
 	addTemplatePath(files)
 	addTemplateExt(files)
@@ -33,6 +27,9 @@ func NewView(layout string, files ...string) *View {
 	t, err := template.New("").Funcs(template.FuncMap{
 		"csrfField": func() (template.HTML, error) {
 			return "", errors.New("csrfField is not implemented")
+		},
+		"pathEscape": func(s string) string {
+			return url.PathEscape(s)
 		},
 	}).ParseFiles(files...)
 	if err != nil {
@@ -45,24 +42,17 @@ func NewView(layout string, files ...string) *View {
 	}
 }
 
-// View struct points at the template.
 type View struct {
 	Template *template.Template
 	Layout   string
 }
 
-func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	v.Render(w, r, nil)
-}
-
-// Render is used to render the view with the predefined layout
 func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) {
 	w.Header().Set("Content-Type", "text/html")
 	var vd Data
 	switch d := data.(type) {
 	case Data:
 		vd = d
-		// do nothing
 	default:
 		vd = Data{
 			Yield: data,
@@ -76,16 +66,20 @@ func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) 
 			return csrfField
 		},
 	})
-	if err := tpl.ExecuteTemplate(&buf, v.Layout, vd); err != nil {
-		log.Println(err)
-		http.Error(w, "Something went wrong. If the problem persists, please email brudnak@icloud.com", http.StatusInternalServerError)
+	err := tpl.ExecuteTemplate(&buf, v.Layout, vd)
+	if err != nil {
+		http.Error(w, "Something went wrong. If the problem "+
+			"persists, please email brudnakt@icloud.com",
+			http.StatusInternalServerError)
 		return
 	}
 	io.Copy(w, &buf)
 }
 
-// layoutFiles returns a slice of strings representing
-// the layout files used in the application
+func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	v.Render(w, r, nil)
+}
+
 func layoutFiles() []string {
 	files, err := filepath.Glob(LayoutDir + "*" + TemplateExt)
 	if err != nil {
@@ -95,9 +89,7 @@ func layoutFiles() []string {
 }
 
 // addTemplatePath takes in a slice of strings
-// representing file paths for templates, and it prepends
-// the TemplateDir directory to each string in the slice
-//
+// representing file paths for templates, and it prepends // the TemplateDir directory to each string in the slice //
 // Eg the input {"home"} would result in the output
 // {"views/home"} if TemplateDir == "views/"
 func addTemplatePath(files []string) {
@@ -107,9 +99,7 @@ func addTemplatePath(files []string) {
 }
 
 // addTemplateExt takes in a slice of strings
-// representing file paths for templates and it appends
-// the TemplateExt extension to each string in the slice
-//
+// representing file paths for templates and it appends // the TemplateExt extension to each string in the slice //
 // Eg the input {"home"} would result in the output
 // {"home.gohtml"} if TemplateExt == ".gohtml"
 func addTemplateExt(files []string) {
