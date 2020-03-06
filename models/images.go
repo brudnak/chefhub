@@ -22,8 +22,8 @@ func (i *Image) Path() string {
 	temp := url.URL{
 		// ToSlash because I'm working on a windows machine.
 		// hopefully will develop on a mac soon...
-		Path: "/" + filepath.ToSlash(i.RelativePath()), // microsoft weirdness
-		// Path: "/" + i.RelativePath(),
+		// Path: "/" + filepath.ToSlash(i.RelativePath()), // microsoft weirdness
+		Path: "/" + i.RelativePath(),
 	}
 	return temp.String()
 }
