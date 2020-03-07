@@ -8,7 +8,7 @@
 
 > Web App for Chef's to show off their skills. Created with the Go programming language.
 
-### 🏠 [ChefHub.pw](chefhub.pw)
+### 🏠 [ChefHub.pw](https://chefhub.pw/) It's Deployed! :rocket:
 
 ## Author
 
