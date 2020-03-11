@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"chefhub.pw/controllers"
+	"chefhub.pw/email"
 	"chefhub.pw/middleware"
 	"chefhub.pw/models"
 	"chefhub.pw/rand"
@@ -30,9 +31,16 @@ func main() {
 	defer services.Close()
 	services.AutoMigrate()
 
+	mgCfg := cfg.Mailgun
+	emailer := email.NewClient(
+		email.WithSender("ChefHub.pw Support",
+			"support@sandbox455cfc35f41d4488b1b9f9212650e57b.mailgun.org"),
+		email.WithMailgun(mgCfg.Domain, mgCfg.APIKey, mgCfg.PublicAPIKey),
+	)
+
 	r := mux.NewRouter()
 	staticC := controllers.NewStatic()
-	usersC := controllers.NewUsers(services.User)
+	usersC := controllers.NewUsers(services.User, emailer)
 	galleriesC := controllers.NewGalleries(services.Gallery, services.Image, r)
 
 	b, err := rand.Bytes(32)
